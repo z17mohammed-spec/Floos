@@ -1,5 +1,4 @@
 
-code
 import { useState, useEffect } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
@@ -11,8 +10,11 @@ const thisM=()=>new Date().toISOString().slice(0,7);
 const mLabel=ym=>new Date(ym+"-02").toLocaleString("en",{month:"long",year:"numeric"});
 const mShort=ym=>new Date(ym+"-02").toLocaleString("en",{month:"short"});
 const getCat=id=>CATS.find(c=>c.id===id)??CATS[10];
+
+// ── localStorage storage (works on Vercel) ───────────────────────────────────
 const sg=k=>{try{const r=localStorage.getItem(k);return r?JSON.parse(r):null;}catch{return null;}};
 const ss=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}};
+
 const wkDays=(off=0)=>{const d=new Date();d.setDate(d.getDate()+off*7);const dow=d.getDay(),diff=dow===0?-6:1-dow;const mon=new Date(d);mon.setDate(d.getDate()+diff);return Array.from({length:7},(_,i)=>{const x=new Date(mon);x.setDate(mon.getDate()+i);return{date:x.toISOString().slice(0,10),lbl:"MTWTFSS"[i]};});};
 
 const GC=({children,sx={},glow=false})=><div style={{background:C.s1,border:`1px solid ${glow?C.aG:C.b}`,borderRadius:16,padding:16,...sx}}>{children}</div>;
@@ -440,10 +442,10 @@ export default function App(){
   const[delCfm,setDelCfm]=useState(null);
 
   useEffect(()=>{
-  const e=sg("floos_exp"),i=sg("floos_inc"),b=sg("floos_bills"),sp=sg("floos_splits"),s=sg("floos_set");
-  if(e)setExpenses(e);if(i)setIncome(i);if(b)setBills(b);if(sp)setSplits(sp);if(s)setSettings({budgets:{},...s});
-  setReady(true);
-},[]);
+    const e=sg("floos_exp"),i=sg("floos_inc"),b=sg("floos_bills"),sp=sg("floos_splits"),s=sg("floos_set");
+    if(e)setExpenses(e);if(i)setIncome(i);if(b)setBills(b);if(sp)setSplits(sp);if(s)setSettings({budgets:{},...s});
+    setReady(true);
+  },[]);
 
   const saveExp=e=>{setExpenses(e);ss("floos_exp",e);};
   const saveInc=i=>{setIncome(i);ss("floos_inc",i);};
@@ -463,7 +465,7 @@ export default function App(){
   const mnExp=expenses.filter(e=>e.date.startsWith(selM));
   const TABS=[{id:"home",em:"🏠",lb:"Home"},{id:"expenses",em:"💸",lb:"Expenses"},{id:"bills",em:"🗓️",lb:"Bills"},{id:"report",em:"📊",lb:"Report"},{id:"settings",em:"⚙️",lb:"Settings"}];
 
-  if(!ready)return <div style={{background:C.bg,minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",color:C.tx2,fontFamily:"sans-serif"}}>Loading...</div>;
+  if(!ready)return <div style={{background:C.bg,minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",color:C.tx2,fontFamily:"sans-serif"}}>Loading Floos...</div>;
 
   return <div style={{background:C.bg,minHeight:"100vh",color:C.tx,fontFamily:"'Inter',-apple-system,sans-serif",maxWidth:500,margin:"0 auto",paddingBottom:90}}>
     <style>{`*{box-sizing:border-box;}input[type="date"],input[type="month"]{color-scheme:dark;}`}</style>
